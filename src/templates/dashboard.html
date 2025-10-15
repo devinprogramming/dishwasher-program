@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="{{ url_for('static', filename='js/chart.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables.min.css')}}">
+    <script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-family: 'Arial', sans-serif;
+        }
+        .sidebar {
+            background: #1e1e1e;
+            min-height: 100vh;
+            padding: 15px 10px;
+        }
+        .sidebar .nav-link {
+            color: #b0b0b0;
+            font-size: 16px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover {
+            background: #333;
+            color: #ffffff;
+            border-radius: 5px;
+        }
+        .sidebar .nav-link.active {
+            background: #515151;
+            color: white;
+            border-radius: 5px;
+        }
+        .main-content {
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            margin-bottom: 100px;
+        }
+        h1 {
+            font-weight: 600;
+            color: #212529;
+        }
+        .container-fluid {
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        {% for key, value in pages.items() %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if key == default_page %}active{% endif %}" href="#" onclick="loadPage('{{ key }}')">{{ value }}</a>
+                        </li>
+                        {% endfor %}
+                        <br>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">🌐 Spühlmaschinen-Plan</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+                <div id="content">
+                    <p></p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function loadPage(page) {
+            $.get("/admin/page/" + page, function(data) {
+                $("#content").html(data);
+                $(".nav-link").removeClass("active");
+                $("a[onclick=\"loadPage('" + page + "')\"]").addClass("active");
+            });
+        }
+
+        $(document).ready(function() {
+            loadPage("{{ default_page }}");
+        });
+    </script>
+
+</body>
+</html>

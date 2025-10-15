@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4"></h2>
+
+    <!-- Toasts container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Plan Management -->
+    <div class="d-flex mb-3 align-items-center">
+        <button id="runUpdate" class="btn btn-primary me-3">🔄 Update Plan</button>
+        <span id="lastUpdate">Letztes Update: <strong>-</strong></span>
+    </div>
+
+    <!-- Statistics -->
+    <div id="statistics">
+        <h4>Statistiken</h4>
+        <h5 class="text-muted">Wie oft die Personen für ihren Dienst eingetragen sind.</h5>
+        <canvas id="dutyChart" width="400" height="200"></canvas>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dienst</th>
+                    <th>Vertretung</th>
+                    <th>Lehrjahr</th>
+                </tr>
+            </thead>
+            <tbody id="statisticsTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+$(document).ready(function () {
+
+    function showToast(message, type = 'standard') {
+        const ToastType = {
+            STANDARD: 'bg-primary',
+            ERROR: 'bg-danger',
+            WARNING: 'bg-warning',
+            SUCCESS: 'bg-success'
+        };
+
+        var toastElement = $('<div>', { 
+                class: `toast align-items-center text-white ${ToastType[type.toUpperCase()] || ToastType.STANDARD} border-0`, 
+                role: 'alert', 
+                'aria-live': 'assertive', 
+                'aria-atomic': 'true' 
+            })
+            .append(
+                $('<div>', { class: 'd-flex w-100' })
+                    .append(
+                        $('<div>', { class: 'toast-body flex-grow-1', css: { 'word-wrap': 'break-word', 'overflow-wrap': 'break-word' } }).text(message),
+                        $('<button>', { type: 'button', class: 'btn-close btn-close-white me-2 m-auto', 'data-bs-dismiss': 'toast', 'aria-label': 'Close' })
+                    )
+            );
+
+        $('#toastContainer').append(toastElement);
+
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+
+        setTimeout(function () {
+            toast.hide();
+            toastElement.remove();
+        }, 10000);
+    }
+
+    function renderChart(statistics) {
+        const years = Object.keys(statistics.data).sort();
+        const labels = years.map(name => {
+            const person = statistics.data[name];
+            return `${name.split(' ')[0]} [${person.year}]`;
+        });
+        const primaryDuties = years.map(name => statistics.data[name].primary);
+        const secondaryDuties = years.map(name => statistics.data[name].secondary);
+
+        const ctx = $('#dutyChart')[0].getContext('2d');
+
+        // Chart lässt sich nur neu generieren wenn das alte Chart destroyed wird
+        if (typeof Chart !== "undefined" && window.dutyChart instanceof Chart) {
+            window.dutyChart.destroy();
+        }
+
+        window.dutyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Dienst',
+                    data: primaryDuties,
+                    backgroundColor: '#007bff',
+                    stack: 'stack0'
+                }, {
+                    label: 'Vertretung',
+                    data: secondaryDuties,
+                    backgroundColor: '#ababab',
+                    stack: 'stack0'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+
+    function renderTable(statistics) {
+        const sortedNames = Object.keys(statistics.data).sort();
+        const tableBody = $('#statisticsTable');
+        tableBody.empty();
+
+        sortedNames.forEach(name => {
+            const person = statistics.data[name];
+            tableBody.append(`
+                <tr>
+                    <td>${name}</td>
+                    <td>${person.primary}</td>
+                    <td>${person.secondary}</td>
+                    <td>${person.year}</td>
+                </tr>
+            `);
+        });
+    }
+
+    function fetchStatistics() {
+        $.get('/admin/get-statistics', function (statistics) {
+            $('#lastUpdate').html('Letztes Update: <strong>' + statistics.timestamp + '</strong> 🎉');
+            renderChart(statistics);
+            renderTable(statistics);
+        });
+    }
+
+    $('#runUpdate').on('click', function () {
+        $.get('/admin/generate-plan', function () {
+            showToast('Plan wurde geupdated!', 'success');
+            fetchStatistics();
+        });
+    });
+
+    fetchStatistics();
+});
+</script>
+</body>
+</html>

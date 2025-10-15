@@ -1,0 +1,3278 @@
+﻿
+                <!DOCTYPE html>
+                <html lang="de">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Spühlmaschinen-Plan - aktualisiert am 07.03.25</title>
+                    <style id="theme-style">
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    line-height: 1.6em;
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                caption {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0px;
+                }
+                .badge {
+                    font-size: x-small;
+                    background-color: blue;
+                    color: white;
+                    padding: 4px 8px;
+                    text-align: center;
+                    border-radius: 5px;
+                    vertical-align: super;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    max-width: 1000px;
+                    margin: 0px auto;
+                }
+                th, td {
+                    border: 1px solid #ccc;
+                    padding: 7px;
+                    text-align: center;
+                }
+                th {
+                    background-color: #2c3e50;
+                    color: #ffffff;
+                    position: sticky;
+                    position: -webkit-sticky;
+                    top: 0px;
+                    z-index: 2;
+                }
+                .month-header {
+                    background-color: #34495e;
+                    color: #ffffff;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+                .weekday {
+                    background-color: #f4f4f4;
+                }
+                .weekday-weekend {
+                    background-color: #ffe0b2;
+                }
+                .weekday-weekday {
+                    background-color: #ffffff;
+                }
+                .holiday {
+                    background-color: #e8e8e8;
+                    color: #7a7a7a;
+                }
+                .highlight {
+                    border: 14px solid orange;
+                    position: relative;
+                    box-sizing: border-box;
+                    border-collapse: separate;
+                }
+                .highlight td {
+                    border: none;
+                }
+                @media (max-width: 768px) {
+                    table {
+                        font-size: 0.9em;
+                    }
+                    th, td {
+                        padding: 8px;
+                    }
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                .table-container {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                @media print {
+                    .print-hidden {
+                        display: none !important;
+                    }
+                }
+            </style>
+                    <script>
+                        function scrollToTodayRow() {
+                            const highlightedRow = document.querySelector('.highlight');
+                            if (highlightedRow) {
+                                requestAnimationFrame(() => {
+                                    highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                });
+                            }
+                        }
+
+                        function setTheme(theme) {
+                            document.getElementById('theme-style').innerHTML = {
+                                'light': `
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    line-height: 1.6em;
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                caption {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0px;
+                }
+                .badge {
+                    font-size: x-small;
+                    background-color: blue;
+                    color: white;
+                    padding: 4px 8px;
+                    text-align: center;
+                    border-radius: 5px;
+                    vertical-align: super;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    max-width: 1000px;
+                    margin: 0px auto;
+                }
+                th, td {
+                    border: 1px solid #ccc;
+                    padding: 7px;
+                    text-align: center;
+                }
+                th {
+                    background-color: #2c3e50;
+                    color: #ffffff;
+                    position: sticky;
+                    position: -webkit-sticky;
+                    top: 0px;
+                    z-index: 2;
+                }
+                .month-header {
+                    background-color: #34495e;
+                    color: #ffffff;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+                .weekday {
+                    background-color: #f4f4f4;
+                }
+                .weekday-weekend {
+                    background-color: #ffe0b2;
+                }
+                .weekday-weekday {
+                    background-color: #ffffff;
+                }
+                .holiday {
+                    background-color: #e8e8e8;
+                    color: #7a7a7a;
+                }
+                .highlight {
+                    border: 14px solid orange;
+                    position: relative;
+                    box-sizing: border-box;
+                    border-collapse: separate;
+                }
+                .highlight td {
+                    border: none;
+                }
+                @media (max-width: 768px) {
+                    table {
+                        font-size: 0.9em;
+                    }
+                    th, td {
+                        padding: 8px;
+                    }
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                .table-container {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                @media print {
+                    .print-hidden {
+                        display: none !important;
+                    }
+                }
+            `,
+                                'dark': `
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    line-height: 1.6em;
+                    background-color: #121212;
+                    color: #e0e0e0;
+                }
+                caption {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0px;
+                }
+                .badge {
+                    font-size: x-small;
+                    background-color: blue;
+                    color: white;
+                    padding: 4px 8px;
+                    text-align: center;
+                    border-radius: 5px;
+                    vertical-align: super;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    max-width: 1000px;
+                    margin: 0px auto;
+                }
+                th, td {
+                    border: 1px solid #444;
+                    padding: 10px;
+                    text-align: center;
+                }
+                th {
+                    background-color: #333333;
+                    color: orange;
+                    position: sticky;
+                    position: -webkit-sticky;
+                    top: 0px;
+                    z-index: 2;
+                }
+                .month-header {
+                    background-color: #444444;
+                    color: #e0e0e0;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+                .weekday {
+                    background-color: #1e1e1e;
+                }
+                .weekday-weekend {
+                    background-color: #2a2a2a;
+                }
+                .weekday-weekday {
+                    background-color: #242424;
+                }
+                .holiday {
+                    background-color: #3a3a3a;
+                    color: #b0b0b0;
+                }
+                .highlight {
+                    border: 14px solid orange;
+                    position: relative;
+                    box-sizing: border-box;
+                    border-collapse: separate;
+                }
+                .highlight td {
+                    border: none;
+                }
+                @media (max-width: 768px) {
+                    table {
+                        font-size: 0.9em;
+                    }
+                    th, td {
+                        padding: 8px;
+                    }
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                @media print {
+                    .print-hidden {
+                        display: none !important;
+                    }
+                }
+            `,
+                                'print': `
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                caption {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0px;
+                }
+                .badge {
+                    font-size: x-small;
+                    padding: 4px 8px;
+                    text-align: center;
+                    vertical-align: super;
+                }
+                th, td {
+                    border: 1px solid #ccc;
+                    text-align: center;
+                }
+                tr:nth-child(odd):not(:nth-child(-n+2)) {
+                    background-color: #f1f1f1;
+                }
+                .month-header {
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+                .wrapper {
+                    overflow-x: auto;
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                @media print {
+                    .print-hidden {
+                        display: none !important;
+                    }
+                }
+            `
+                            }[theme] || `
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    line-height: 1.6em;
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                caption {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0px;
+                }
+                .badge {
+                    font-size: x-small;
+                    background-color: blue;
+                    color: white;
+                    padding: 4px 8px;
+                    text-align: center;
+                    border-radius: 5px;
+                    vertical-align: super;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    max-width: 1000px;
+                    margin: 0px auto;
+                }
+                th, td {
+                    border: 1px solid #ccc;
+                    padding: 7px;
+                    text-align: center;
+                }
+                th {
+                    background-color: #2c3e50;
+                    color: #ffffff;
+                    position: sticky;
+                    position: -webkit-sticky;
+                    top: 0px;
+                    z-index: 2;
+                }
+                .month-header {
+                    background-color: #34495e;
+                    color: #ffffff;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+                .weekday {
+                    background-color: #f4f4f4;
+                }
+                .weekday-weekend {
+                    background-color: #ffe0b2;
+                }
+                .weekday-weekday {
+                    background-color: #ffffff;
+                }
+                .holiday {
+                    background-color: #e8e8e8;
+                    color: #7a7a7a;
+                }
+                .highlight {
+                    border: 14px solid orange;
+                    position: relative;
+                    box-sizing: border-box;
+                    border-collapse: separate;
+                }
+                .highlight td {
+                    border: none;
+                }
+                @media (max-width: 768px) {
+                    table {
+                        font-size: 0.9em;
+                    }
+                    th, td {
+                        padding: 8px;
+                    }
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                .table-container {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                @media print {
+                    .print-hidden {
+                        display: none !important;
+                    }
+                }
+            `;
+                            localStorage.setItem('theme', theme);
+                        }
+
+                        function highlightTodayRows() {
+                            const currentDate = new Intl.DateTimeFormat('de-DE', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: '2-digit'
+                                    }).format(new Date());
+                                    
+                            const tbodyRows = document.querySelector('table tbody').querySelectorAll('tr');
+                            
+                            tbodyRows.forEach(row => {
+                                const dateCell = row.querySelector('td:nth-child(2)');
+                                if (dateCell) {
+                                    const rowDate = dateCell.textContent.trim();
+                                    if (rowDate === currentDate) {
+                                        row.classList.add('highlight');
+                                    }
+                                }
+                            });
+                        }
+
+                        function populateFilterDropdown() {
+                            const dropdown = document.getElementById('row-filter');
+                            const monthHeaders = document.querySelectorAll('.month-header');
+                            const tbodyRows = document.querySelectorAll('table tbody tr');
+                            let months = [];
+
+                            // Add a custom row count option
+                            const rowCountOption = document.createElement('option');
+                            rowCountOption.value = '10';
+                            rowCountOption.textContent = '10 Zeilen';
+                            dropdown.appendChild(rowCountOption);
+
+                            // Add an option to show all rows
+                            const allRowsOption = document.createElement('option');
+                            allRowsOption.value = 'all';
+                            allRowsOption.textContent = 'Alle';
+                            dropdown.appendChild(allRowsOption);
+
+
+
+                            // Collect unique months from the table
+                            monthHeaders.forEach(header => {
+                                const monthText = header.querySelector('td').textContent.trim();
+                                if (months.indexOf(monthText) === -1) {
+                                    months.push(monthText);
+                                }
+                            });
+
+                            // Populate the dropdown with months and row options
+                            months.forEach(month => {
+                                const option = document.createElement('option');
+                                option.value = month;
+                                option.textContent = month;
+                                dropdown.appendChild(option);
+                            });
+                        }
+
+                        function filterRows() {
+                            const dropdown = document.getElementById('row-filter');
+                            const selectedValue = dropdown.value;
+                            const tbodyRows = document.querySelectorAll('table tbody tr');
+                            let todayIndex = -1; // Use this to find the target row index if needed
+                            let monthRows = [];
+                            let currentMonth = null; // Variable to track the current month
+
+                            if (selectedValue === '10') {
+                                    const highlightedRow = document.querySelector('.highlight');
+                                    if (!highlightedRow) return;
+
+                                    const tbodyRows = document.querySelectorAll('table tbody tr');
+                                    const todayIndex = [...tbodyRows].indexOf(highlightedRow);
+
+                                    tbodyRows.forEach((row, index) => {
+                                        if (index >= todayIndex - 5 && index <= todayIndex + 5) {
+                                            row.style.display = ''; // Show row within the buffer
+                                        } else {
+                                            row.style.display = 'none'; // Hide row outside the buffer
+                                        }
+                                    });
+
+                                    scrollToTodayRow();
+                                    return; // Exit early from the rest of the filtering logic
+                                }
+
+                            tbodyRows.forEach((row, index) => {
+                                const isMonthHeader = row.classList.contains('month-header');
+                                const isDateRow = row.classList.contains('weekday-weekday') || row.classList.contains('weekday-weekend');
+                                const rowDateText = row.querySelector('td') ? row.querySelector('td').textContent.trim() : '';
+
+                                // Handling the month selection
+                                if (selectedValue !== 'all' && selectedValue !== '10') {
+                                    if (isMonthHeader) {
+                                        // If the row is a month header, check if it matches the selected month
+                                        currentMonth = rowDateText; // Set the current month
+                                        if (currentMonth === selectedValue) {
+                                            monthRows.push(index); // Include this month header
+                                        }
+                                    }
+                                    // If it's a date row, include it if the currentMonth matches the selected month
+                                    if (isDateRow && currentMonth === selectedValue) {
+                                        monthRows.push(index); // Include this date row
+                                    }
+                                }
+                            });
+
+                            // Show or hide rows based on the selected month
+                            tbodyRows.forEach((row, index) => {
+                                if (selectedValue === 'all' || monthRows.includes(index)) {
+                                    row.style.display = ''; // Show row if it matches the filter
+                                } else {
+                                    row.style.display = 'none'; // Hide row otherwise
+                                }
+                            });
+
+                            // Optional: Scroll to the highlighted row if needed
+                            scrollToTodayRow();
+                        }
+
+                        window.onload = function() {
+                                highlightTodayRows();
+
+                                const savedTheme = localStorage.getItem('theme') || 'light';
+                                setTheme(savedTheme);
+
+                                scrollToTodayRow();
+
+                                const themeSelect = document.getElementById('theme-select');
+                                if (themeSelect) {
+                                    themeSelect.value = savedTheme;
+                                }
+
+                                filterRows();
+                            }
+
+                        document.addEventListener("DOMContentLoaded", function () {
+                            populateFilterDropdown();
+                            //checkbox = document.getElementById('showallCheckbox');
+                            //checkbox.addEventListener('change', filterRows);
+                            
+                        });
+                    </script>
+                </head>
+                <body>
+                    <div class="wrapper">
+                        <div class="print-hidden" style="position: fixed; bottom: 5px; right: 10px; display: grid; grid-template-columns: repeat(3, auto); gap: 10px; z-index: 1;">
+                            <!-- Admin Redirect Button -->
+                            <button onclick="window.location.href='/admin/'" style="font-size: 20px; border: none; background: transparent; cursor: pointer;">
+                                ⚙️
+                            </button>
+
+                            <!-- Filter Dropdown -->
+                            <select id="row-filter" onchange="filterRows()">
+                            </select>
+
+                            
+                            <!-- Theme Selector -->
+                            <select id="theme-select" onchange="setTheme(this.value); scrollToTodayRow();" style="height: 30px; border: 4px solid red;">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="print">Print</option>
+                            </select>
+
+                        </div>
+                        <table>
+                            <caption>Spühlmaschinen-Plan <span class="badge">stand 07.03.25</span></caption>
+                            <thead>
+                                <tr>
+                                    <th>KW</th>
+                                    <th>Datum</th>
+                                    <th>Wochentag</th>
+                                    <th>Dienst</th>
+                                    <th>Vertretung</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                
+                        <tr class='month-header'>
+                            <td colspan='5'>September 2024</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday'>
+                        <td>36</td>
+                        <td class='bold'>02.09.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>36</td>
+                        <td class='bold'>03.09.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>36</td>
+                        <td class='bold'>04.09.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>36</td>
+                        <td class='bold'>05.09.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>36</td>
+                        <td class='bold'>06.09.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>36</td>
+                        <td class='bold'>07.09.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>36</td>
+                        <td class='bold'>08.09.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>37</td>
+                        <td class='bold'>09.09.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>37</td>
+                        <td class='bold'>10.09.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>37</td>
+                        <td class='bold'>11.09.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>37</td>
+                        <td class='bold'>12.09.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>37</td>
+                        <td class='bold'>13.09.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>37</td>
+                        <td class='bold'>14.09.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>37</td>
+                        <td class='bold'>15.09.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>38</td>
+                        <td class='bold'>16.09.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>38</td>
+                        <td class='bold'>17.09.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>38</td>
+                        <td class='bold'>18.09.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>38</td>
+                        <td class='bold'>19.09.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>38</td>
+                        <td class='bold'>20.09.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>38</td>
+                        <td class='bold'>21.09.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>38</td>
+                        <td class='bold'>22.09.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>39</td>
+                        <td class='bold'>23.09.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>39</td>
+                        <td class='bold'>24.09.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>39</td>
+                        <td class='bold'>25.09.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>39</td>
+                        <td class='bold'>26.09.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>39</td>
+                        <td class='bold'>27.09.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>39</td>
+                        <td class='bold'>28.09.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>39</td>
+                        <td class='bold'>29.09.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>40</td>
+                        <td class='bold'>30.09.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Oktober 2024</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday'>
+                        <td>40</td>
+                        <td class='bold'>01.10.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>40</td>
+                        <td class='bold'>02.10.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>40</td>
+                        <td class='bold'>03.10.24</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>40</td>
+                        <td class='bold'>04.10.24</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>40</td>
+                        <td class='bold'>05.10.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>40</td>
+                        <td class='bold'>06.10.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>41</td>
+                        <td class='bold'>07.10.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>41</td>
+                        <td class='bold'>08.10.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>41</td>
+                        <td class='bold'>09.10.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>41</td>
+                        <td class='bold'>10.10.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>41</td>
+                        <td class='bold'>11.10.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>41</td>
+                        <td class='bold'>12.10.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>41</td>
+                        <td class='bold'>13.10.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>42</td>
+                        <td class='bold'>14.10.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>42</td>
+                        <td class='bold'>15.10.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>42</td>
+                        <td class='bold'>16.10.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>42</td>
+                        <td class='bold'>17.10.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>42</td>
+                        <td class='bold'>18.10.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>42</td>
+                        <td class='bold'>19.10.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>42</td>
+                        <td class='bold'>20.10.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>43</td>
+                        <td class='bold'>21.10.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>43</td>
+                        <td class='bold'>22.10.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>43</td>
+                        <td class='bold'>23.10.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>43</td>
+                        <td class='bold'>24.10.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>43</td>
+                        <td class='bold'>25.10.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>43</td>
+                        <td class='bold'>26.10.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>43</td>
+                        <td class='bold'>27.10.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>44</td>
+                        <td class='bold'>28.10.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>44</td>
+                        <td class='bold'>29.10.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>44</td>
+                        <td class='bold'>30.10.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>44</td>
+                        <td class='bold'>31.10.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>November 2024</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday holiday'>
+                        <td>44</td>
+                        <td class='bold'>01.11.24</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>44</td>
+                        <td class='bold'>02.11.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>44</td>
+                        <td class='bold'>03.11.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>45</td>
+                        <td class='bold'>04.11.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>45</td>
+                        <td class='bold'>05.11.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>45</td>
+                        <td class='bold'>06.11.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>45</td>
+                        <td class='bold'>07.11.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>45</td>
+                        <td class='bold'>08.11.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>45</td>
+                        <td class='bold'>09.11.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>45</td>
+                        <td class='bold'>10.11.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>46</td>
+                        <td class='bold'>11.11.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>46</td>
+                        <td class='bold'>12.11.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>46</td>
+                        <td class='bold'>13.11.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>46</td>
+                        <td class='bold'>14.11.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>46</td>
+                        <td class='bold'>15.11.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>46</td>
+                        <td class='bold'>16.11.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>46</td>
+                        <td class='bold'>17.11.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>47</td>
+                        <td class='bold'>18.11.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>47</td>
+                        <td class='bold'>19.11.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>47</td>
+                        <td class='bold'>20.11.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>47</td>
+                        <td class='bold'>21.11.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>47</td>
+                        <td class='bold'>22.11.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>47</td>
+                        <td class='bold'>23.11.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>47</td>
+                        <td class='bold'>24.11.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>48</td>
+                        <td class='bold'>25.11.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>48</td>
+                        <td class='bold'>26.11.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>48</td>
+                        <td class='bold'>27.11.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>48</td>
+                        <td class='bold'>28.11.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>48</td>
+                        <td class='bold'>29.11.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>48</td>
+                        <td class='bold'>30.11.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Dezember 2024</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekend'>
+                        <td>48</td>
+                        <td class='bold'>01.12.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>49</td>
+                        <td class='bold'>02.12.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>49</td>
+                        <td class='bold'>03.12.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>49</td>
+                        <td class='bold'>04.12.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>49</td>
+                        <td class='bold'>05.12.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>49</td>
+                        <td class='bold'>06.12.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>49</td>
+                        <td class='bold'>07.12.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>49</td>
+                        <td class='bold'>08.12.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>50</td>
+                        <td class='bold'>09.12.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>50</td>
+                        <td class='bold'>10.12.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>50</td>
+                        <td class='bold'>11.12.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>50</td>
+                        <td class='bold'>12.12.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>50</td>
+                        <td class='bold'>13.12.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>50</td>
+                        <td class='bold'>14.12.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>50</td>
+                        <td class='bold'>15.12.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>51</td>
+                        <td class='bold'>16.12.24</td>
+                        <td>Mo</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>51</td>
+                        <td class='bold'>17.12.24</td>
+                        <td>Di</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>51</td>
+                        <td class='bold'>18.12.24</td>
+                        <td>Mi</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>51</td>
+                        <td class='bold'>19.12.24</td>
+                        <td>Do</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>51</td>
+                        <td class='bold'>20.12.24</td>
+                        <td>Fr</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>51</td>
+                        <td class='bold'>21.12.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>51</td>
+                        <td class='bold'>22.12.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>52</td>
+                        <td class='bold'>23.12.24</td>
+                        <td>Mo</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>52</td>
+                        <td class='bold'>24.12.24</td>
+                        <td>Di</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>52</td>
+                        <td class='bold'>25.12.24</td>
+                        <td>Mi</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>52</td>
+                        <td class='bold'>26.12.24</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>52</td>
+                        <td class='bold'>27.12.24</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>52</td>
+                        <td class='bold'>28.12.24</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>52</td>
+                        <td class='bold'>29.12.24</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>1</td>
+                        <td class='bold'>30.12.24</td>
+                        <td>Mo</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>1</td>
+                        <td class='bold'>31.12.24</td>
+                        <td>Di</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Januar 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday holiday'>
+                        <td>1</td>
+                        <td class='bold'>01.01.25</td>
+                        <td>Mi</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>1</td>
+                        <td class='bold'>02.01.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>1</td>
+                        <td class='bold'>03.01.25</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>1</td>
+                        <td class='bold'>04.01.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>1</td>
+                        <td class='bold'>05.01.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>2</td>
+                        <td class='bold'>06.01.25</td>
+                        <td>Mo</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>2</td>
+                        <td class='bold'>07.01.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>2</td>
+                        <td class='bold'>08.01.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>2</td>
+                        <td class='bold'>09.01.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>2</td>
+                        <td class='bold'>10.01.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>2</td>
+                        <td class='bold'>11.01.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>2</td>
+                        <td class='bold'>12.01.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>3</td>
+                        <td class='bold'>13.01.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>3</td>
+                        <td class='bold'>14.01.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>3</td>
+                        <td class='bold'>15.01.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>3</td>
+                        <td class='bold'>16.01.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>3</td>
+                        <td class='bold'>17.01.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>3</td>
+                        <td class='bold'>18.01.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>3</td>
+                        <td class='bold'>19.01.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>4</td>
+                        <td class='bold'>20.01.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>4</td>
+                        <td class='bold'>21.01.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>4</td>
+                        <td class='bold'>22.01.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>4</td>
+                        <td class='bold'>23.01.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>4</td>
+                        <td class='bold'>24.01.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>4</td>
+                        <td class='bold'>25.01.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>4</td>
+                        <td class='bold'>26.01.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>5</td>
+                        <td class='bold'>27.01.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>5</td>
+                        <td class='bold'>28.01.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>5</td>
+                        <td class='bold'>29.01.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>5</td>
+                        <td class='bold'>30.01.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>5</td>
+                        <td class='bold'>31.01.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Februar 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekend'>
+                        <td>5</td>
+                        <td class='bold'>01.02.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>5</td>
+                        <td class='bold'>02.02.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>6</td>
+                        <td class='bold'>03.02.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>6</td>
+                        <td class='bold'>04.02.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>6</td>
+                        <td class='bold'>05.02.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>6</td>
+                        <td class='bold'>06.02.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>6</td>
+                        <td class='bold'>07.02.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>6</td>
+                        <td class='bold'>08.02.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>6</td>
+                        <td class='bold'>09.02.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>7</td>
+                        <td class='bold'>10.02.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>7</td>
+                        <td class='bold'>11.02.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>7</td>
+                        <td class='bold'>12.02.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>7</td>
+                        <td class='bold'>13.02.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>7</td>
+                        <td class='bold'>14.02.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>7</td>
+                        <td class='bold'>15.02.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>7</td>
+                        <td class='bold'>16.02.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>8</td>
+                        <td class='bold'>17.02.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>8</td>
+                        <td class='bold'>18.02.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>8</td>
+                        <td class='bold'>19.02.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>8</td>
+                        <td class='bold'>20.02.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>8</td>
+                        <td class='bold'>21.02.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>8</td>
+                        <td class='bold'>22.02.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>8</td>
+                        <td class='bold'>23.02.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>9</td>
+                        <td class='bold'>24.02.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>9</td>
+                        <td class='bold'>25.02.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>9</td>
+                        <td class='bold'>26.02.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>9</td>
+                        <td class='bold'>27.02.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>9</td>
+                        <td class='bold'>28.02.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>März 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekend'>
+                        <td>9</td>
+                        <td class='bold'>01.03.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>9</td>
+                        <td class='bold'>02.03.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>10</td>
+                        <td class='bold'>03.03.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>10</td>
+                        <td class='bold'>04.03.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>10</td>
+                        <td class='bold'>05.03.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>10</td>
+                        <td class='bold'>06.03.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>10</td>
+                        <td class='bold'>07.03.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>10</td>
+                        <td class='bold'>08.03.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>10</td>
+                        <td class='bold'>09.03.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>11</td>
+                        <td class='bold'>10.03.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>11</td>
+                        <td class='bold'>11.03.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>11</td>
+                        <td class='bold'>12.03.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>11</td>
+                        <td class='bold'>13.03.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>11</td>
+                        <td class='bold'>14.03.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>11</td>
+                        <td class='bold'>15.03.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>11</td>
+                        <td class='bold'>16.03.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>12</td>
+                        <td class='bold'>17.03.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>12</td>
+                        <td class='bold'>18.03.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>12</td>
+                        <td class='bold'>19.03.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>12</td>
+                        <td class='bold'>20.03.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>12</td>
+                        <td class='bold'>21.03.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>12</td>
+                        <td class='bold'>22.03.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>12</td>
+                        <td class='bold'>23.03.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>13</td>
+                        <td class='bold'>24.03.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>13</td>
+                        <td class='bold'>25.03.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>13</td>
+                        <td class='bold'>26.03.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>13</td>
+                        <td class='bold'>27.03.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>13</td>
+                        <td class='bold'>28.03.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>13</td>
+                        <td class='bold'>29.03.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>13</td>
+                        <td class='bold'>30.03.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>14</td>
+                        <td class='bold'>31.03.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>April 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday'>
+                        <td>14</td>
+                        <td class='bold'>01.04.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>14</td>
+                        <td class='bold'>02.04.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>14</td>
+                        <td class='bold'>03.04.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>14</td>
+                        <td class='bold'>04.04.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>14</td>
+                        <td class='bold'>05.04.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>14</td>
+                        <td class='bold'>06.04.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>15</td>
+                        <td class='bold'>07.04.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>15</td>
+                        <td class='bold'>08.04.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>15</td>
+                        <td class='bold'>09.04.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>15</td>
+                        <td class='bold'>10.04.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>15</td>
+                        <td class='bold'>11.04.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>15</td>
+                        <td class='bold'>12.04.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>15</td>
+                        <td class='bold'>13.04.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>16</td>
+                        <td class='bold'>14.04.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>16</td>
+                        <td class='bold'>15.04.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>16</td>
+                        <td class='bold'>16.04.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>16</td>
+                        <td class='bold'>17.04.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>16</td>
+                        <td class='bold'>18.04.25</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>16</td>
+                        <td class='bold'>19.04.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>16</td>
+                        <td class='bold'>20.04.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>17</td>
+                        <td class='bold'>21.04.25</td>
+                        <td>Mo</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>17</td>
+                        <td class='bold'>22.04.25</td>
+                        <td>Di</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>17</td>
+                        <td class='bold'>23.04.25</td>
+                        <td>Mi</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>17</td>
+                        <td class='bold'>24.04.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>17</td>
+                        <td class='bold'>25.04.25</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>17</td>
+                        <td class='bold'>26.04.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>17</td>
+                        <td class='bold'>27.04.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>18</td>
+                        <td class='bold'>28.04.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>18</td>
+                        <td class='bold'>29.04.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>18</td>
+                        <td class='bold'>30.04.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Mai 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday holiday'>
+                        <td>18</td>
+                        <td class='bold'>01.05.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>18</td>
+                        <td class='bold'>02.05.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>18</td>
+                        <td class='bold'>03.05.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>18</td>
+                        <td class='bold'>04.05.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>19</td>
+                        <td class='bold'>05.05.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>19</td>
+                        <td class='bold'>06.05.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>19</td>
+                        <td class='bold'>07.05.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>19</td>
+                        <td class='bold'>08.05.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>19</td>
+                        <td class='bold'>09.05.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>19</td>
+                        <td class='bold'>10.05.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>19</td>
+                        <td class='bold'>11.05.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>20</td>
+                        <td class='bold'>12.05.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>20</td>
+                        <td class='bold'>13.05.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>20</td>
+                        <td class='bold'>14.05.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>20</td>
+                        <td class='bold'>15.05.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>20</td>
+                        <td class='bold'>16.05.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>20</td>
+                        <td class='bold'>17.05.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>20</td>
+                        <td class='bold'>18.05.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>21</td>
+                        <td class='bold'>19.05.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>21</td>
+                        <td class='bold'>20.05.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>21</td>
+                        <td class='bold'>21.05.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>21</td>
+                        <td class='bold'>22.05.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>21</td>
+                        <td class='bold'>23.05.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>21</td>
+                        <td class='bold'>24.05.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>21</td>
+                        <td class='bold'>25.05.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>22</td>
+                        <td class='bold'>26.05.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>22</td>
+                        <td class='bold'>27.05.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>22</td>
+                        <td class='bold'>28.05.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Maximimilian S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>22</td>
+                        <td class='bold'>29.05.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>22</td>
+                        <td class='bold'>30.05.25</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>22</td>
+                        <td class='bold'>31.05.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Juni 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekend'>
+                        <td>22</td>
+                        <td class='bold'>01.06.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>23</td>
+                        <td class='bold'>02.06.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>23</td>
+                        <td class='bold'>03.06.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Waldemar R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>23</td>
+                        <td class='bold'>04.06.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Thomas C.</td>
+                        <td>Daniel N.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>23</td>
+                        <td class='bold'>05.06.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Raphael C.</td>
+                        <td>Tahir D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>23</td>
+                        <td class='bold'>06.06.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Christian D.</td>
+                        <td>Jonas B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>23</td>
+                        <td class='bold'>07.06.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>23</td>
+                        <td class='bold'>08.06.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>24</td>
+                        <td class='bold'>09.06.25</td>
+                        <td>Mo</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>24</td>
+                        <td class='bold'>10.06.25</td>
+                        <td>Di</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>24</td>
+                        <td class='bold'>11.06.25</td>
+                        <td>Mi</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>24</td>
+                        <td class='bold'>12.06.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>24</td>
+                        <td class='bold'>13.06.25</td>
+                        <td>Fr</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>24</td>
+                        <td class='bold'>14.06.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>24</td>
+                        <td class='bold'>15.06.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>25</td>
+                        <td class='bold'>16.06.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>25</td>
+                        <td class='bold'>17.06.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>25</td>
+                        <td class='bold'>18.06.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday holiday'>
+                        <td>25</td>
+                        <td class='bold'>19.06.25</td>
+                        <td>Do</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>25</td>
+                        <td class='bold'>20.06.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Valentin K.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>25</td>
+                        <td class='bold'>21.06.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>25</td>
+                        <td class='bold'>22.06.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>26</td>
+                        <td class='bold'>23.06.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Ante R.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>26</td>
+                        <td class='bold'>24.06.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Manuel S.</td>
+                        <td>Gaetano A.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>26</td>
+                        <td class='bold'>25.06.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Helene S.</td>
+                        <td>Marvin H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>26</td>
+                        <td class='bold'>26.06.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Ben S.</td>
+                        <td>Thomas C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>26</td>
+                        <td class='bold'>27.06.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Sezdzhan S.</td>
+                        <td>Ben S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>26</td>
+                        <td class='bold'>28.06.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>26</td>
+                        <td class='bold'>29.06.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>27</td>
+                        <td class='bold'>30.06.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Matteo G.</td>
+                        <td>Yetim Y.</td>
+                    </tr>
+                    
+                        <tr class='month-header'>
+                            <td colspan='5'>Juli 2025</td>
+                        </tr>
+                        
+                    <tr class='weekday-weekday'>
+                        <td>27</td>
+                        <td class='bold'>01.07.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Florentina H.</td>
+                        <td>Thuy P.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>27</td>
+                        <td class='bold'>02.07.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Marvin H.</td>
+                        <td>Daniel Ö.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>27</td>
+                        <td class='bold'>03.07.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Ramzan K.</td>
+                        <td>Erwin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>27</td>
+                        <td class='bold'>04.07.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Erwin K.</td>
+                        <td>Ramzan K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>27</td>
+                        <td class='bold'>05.07.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>27</td>
+                        <td class='bold'>06.07.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>28</td>
+                        <td class='bold'>07.07.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Gaetano A.</td>
+                        <td>Sezdzhan S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>28</td>
+                        <td class='bold'>08.07.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Jonas B.</td>
+                        <td>Helene S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>28</td>
+                        <td class='bold'>09.07.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Tahir D.</td>
+                        <td>Manuel S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>28</td>
+                        <td class='bold'>10.07.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Daniel N.</td>
+                        <td>Ante R.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>28</td>
+                        <td class='bold'>11.07.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Waldemar R.</td>
+                        <td>Valentin K.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>28</td>
+                        <td class='bold'>12.07.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>28</td>
+                        <td class='bold'>13.07.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>29</td>
+                        <td class='bold'>14.07.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Daniel Ö.</td>
+                        <td>Florentina H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>29</td>
+                        <td class='bold'>15.07.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Thuy P.</td>
+                        <td>Matteo G.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>29</td>
+                        <td class='bold'>16.07.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Yetim Y.</td>
+                        <td>Christian D.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>29</td>
+                        <td class='bold'>17.07.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Maximimilian S.</td>
+                        <td>Raphael C.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>29</td>
+                        <td class='bold'>18.07.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Cedric S.</td>
+                        <td>Niclas J.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>29</td>
+                        <td class='bold'>19.07.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>29</td>
+                        <td class='bold'>20.07.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>30</td>
+                        <td class='bold'>21.07.25</td>
+                        <td>Mo</td>
+                        <td class='bold'>Timur Y.</td>
+                        <td>Niklas H.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>30</td>
+                        <td class='bold'>22.07.25</td>
+                        <td>Di</td>
+                        <td class='bold'>Niclas J.</td>
+                        <td>Matthias E.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>30</td>
+                        <td class='bold'>23.07.25</td>
+                        <td>Mi</td>
+                        <td class='bold'>Pia B.</td>
+                        <td>Timur Y.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>30</td>
+                        <td class='bold'>24.07.25</td>
+                        <td>Do</td>
+                        <td class='bold'>Matthias E.</td>
+                        <td>Pia B.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekday'>
+                        <td>30</td>
+                        <td class='bold'>25.07.25</td>
+                        <td>Fr</td>
+                        <td class='bold'>Niklas H.</td>
+                        <td>Cedric S.</td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>30</td>
+                        <td class='bold'>26.07.25</td>
+                        <td>Sa</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    
+                    <tr class='weekday-weekend'>
+                        <td>30</td>
+                        <td class='bold'>27.07.25</td>
+                        <td>So</td>
+                        <td class='bold'> - </td>
+                        <td> - </td>
+                    </tr>
+                    </tbody></table></div></body></html>

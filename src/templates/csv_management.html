@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .editing { background-color: #ffffcc !important; }
+        .container { margin-top: 20px; }
+        th {
+            position: sticky;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Toasts container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer">
+    </div>
+
+    <!-- Backup Management -->
+    <div class="d-flex mb-3 align-items-center">
+        <button id="createBackup" class="btn btn-primary me-2">💾 Backup Erstellen</button>
+        <select id="restoreBackup" class="form-select w-auto">
+            <option value="">Backup wiederherstellen...</option>
+        </select>
+    </div>
+
+    <!-- CSV Tabs -->
+    <ul class="nav nav-tabs" id="csvTabs"></ul>
+    <div class="tab-content mt-3" id="csvTabContent"></div>
+</div>
+
+<script>
+$(document).ready(function () {
+    loadCSVs();
+    loadBackups();
+
+    function loadCSVs() {
+        $.get('/api/csv', function (csvFiles) {
+            $('#csvTabs').empty();
+            $('#csvTabContent').empty();
+            csvFiles.forEach((file, index) => {
+                let tabId = 'tab-' + file.replace('.csv', '');
+                let activeClass = index === 0 ? 'active' : '';
+
+                $('#csvTabs').append(`<li class="nav-item">
+                    <a class="nav-link ${activeClass}" data-bs-toggle="tab" href="#${tabId}">${file}</a>
+                </li>`);
+
+                $('#csvTabContent').append(`<div class="tab-pane fade show ${activeClass}" id="${tabId}">
+                    <div id="${tabId}-metadata" class="mb-3"></div>  <!-- Metadata will be loaded here -->
+                    <button class="btn btn-success mb-2 addRow" style="position: fixed; bottom: 20px; right: 20px; z-index: 1;" data-file="${file}">✅ Neue Zeile Hinzufügen</button>
+                    <h4>Tabelle</h4>
+                    <table class="table table-striped table-bordered dataTable" data-file="${file}">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>`);
+
+                loadCSVMetadata(file, `#${tabId}-metadata`);
+                loadCSVData(file, `#${tabId} table`);
+            });
+        });
+    }
+
+
+    function loadCSVMetadata(file, metadataSelector) {
+        $.get(`/api/csv/${file}/meta`, function (metadata) {
+            let columnDefinitions = Object.entries(metadata.columns)
+                .map(([column, description]) => `<li class="list-group-item"><strong>${column}:</strong> ${description}</li>`)
+                .join('');
+
+            let metadataHtml = `
+                <p class="text-muted mb-4">${metadata.general_info}</p>
+                <h4>Spaltenbeschreibungen</h4>
+                <ul class="list-group">${columnDefinitions}</ul>
+                <p class="alert alert-info mt-3">${metadata.general_notes}</p>
+            `;
+
+            $(metadataSelector).html(metadataHtml);
+        }).fail(function () {
+            $(metadataSelector).html('<p class="text-danger">⚠️ Die Spaltenbeschreibungen konnten nicht geladen werden.</p>');
+        });
+    }
+
+
+    function loadCSVData(file, tableSelector) {
+        $.get(`/api/csv/${file}`, function (response) {
+            let table = $(tableSelector);
+            let thead = table.find('thead').empty();
+            let tbody = table.find('tbody').empty();
+            
+            let headers = response.columns;
+            let headerRow = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '<th>Aktionen</th></tr>';
+            thead.append(headerRow);
+
+            response.data.forEach((row, index) => {
+                let rowHtml = '<tr>';
+                headers.forEach(h => {
+                    let value = row[h] !== undefined ? row[h] : ""; // Ensure empty cells are valid
+                    rowHtml += `<td class="editable" data-column="${h}" data-index="${index}">${value}</td>`;
+                });
+                rowHtml += '<td><button class="btn btn-sm btn-danger deleteRow">✖ Löschen</button></td></tr>';
+                tbody.append(rowHtml);
+            });
+
+            addEventListeners(table, file);
+        });
+    }
+
+    function addEventListeners(table, file) {
+        table.find('.editable').on('click', function () {
+            let cell = $(this);
+            if (cell.find('input').length === 0) {
+                let currentValue = cell.text();
+                let input = $('<input type="text" class="form-control">').val(currentValue);
+                cell.empty().append(input).addClass('editing');
+
+                input.focus().on('blur', function () {
+                    let newValue = $(this).val();
+                    cell.text(newValue).removeClass('editing');
+
+                    let column = cell.data('column');
+                    let rowIndex = cell.data('index');
+
+                    $.ajax({
+                        url: `/api/csv/${file}/update`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ index: rowIndex, column: column, value: newValue })
+                    });
+                });
+            }
+        });
+
+        table.find('.deleteRow').on('click', function () {
+            let row = $(this).closest('tr');
+            let rowIndex = row.index();
+            
+            $.ajax({
+                url: `/api/csv/${file}/delete`,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ index: rowIndex }),
+                success: function () {
+                    showToast('Zeile ' + row.find('td:first').text() + ' entfernt!', 'warning');
+                    row.remove();
+                }
+            });
+        });
+    }
+
+
+    $(document).on('click', '.addRow', function () {
+        let file = $(this).data('file');
+        $.post(`/api/csv/${file}/add`, function () {
+            loadCSVData(file, `table[data-file="${file}"]`);
+        });
+    });
+
+    function loadBackups() {
+        $.get('/api/backups', function (backups) {
+            $('#restoreBackup').empty().append('<option value="">Backup wiederherstellen...</option>');
+            backups.forEach(backup => {
+                $('#restoreBackup').append(`<option value="${backup}">${backup}</option>`);
+            });
+        });
+    }
+
+    function showToast(message, type = 'standard') {
+        const ToastType = {
+            STANDARD: 'bg-primary',
+            ERROR: 'bg-danger',
+            WARNING: 'bg-warning',
+            SUCCESS: 'bg-success'
+        };
+
+        var toastElement = $('<div>', { 
+                class: `toast align-items-center text-white ${ToastType[type.toUpperCase()] || ToastType.STANDARD} border-0`, 
+                role: 'alert', 
+                'aria-live': 'assertive', 
+                'aria-atomic': 'true' 
+            })
+            .append(
+                $('<div>', { class: 'd-flex w-100' })
+                    .append(
+                        $('<div>', { class: 'toast-body flex-grow-1', css: { 'word-wrap': 'break-word', 'overflow-wrap': 'break-word' } }).text(message),
+                        $('<button>', { type: 'button', class: 'btn-close btn-close-white me-2 m-auto', 'data-bs-dismiss': 'toast', 'aria-label': 'Close' })
+                    )
+            );
+
+        $('#toastContainer').append(toastElement);
+
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+
+        setTimeout(function () {
+            toast.hide();
+            toastElement.remove();
+        }, 10000);
+    }
+
+
+    $('#createBackup').on('click', function () {
+        $.post('/api/backups/create', function () {
+            loadBackups();
+            showToast('Backup erstellt!');
+        });
+    });
+
+    $('#restoreBackup').on('change', function () {
+        let backup = $(this).val();
+        if (backup) {
+            $.ajax({
+                url: `/api/backups/restore`,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ backup: backup }),
+                success: function () {
+                    loadCSVs();
+                    showToast('Backup von ' + $('#restoreBackup').find(":selected").text() + ' wiederhergestellt.', 'success');
+                    $('#restoreBackup').val('');
+                    $('#restoreBackup').prop('selectedIndex', 0);
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

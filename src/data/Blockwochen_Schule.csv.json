@@ -1,0 +1,9 @@
+{
+    "general_info": "Diese Liste beinhaltet alle Blockwochen an dem Azubis aus dem Lehrjahr X am Unterricht teilnehmen.",
+    "columns": {
+        "Jahr": "Das Jahr für die Kalenderwoche, z.B. <mark>2024</mark>.",
+        "Kalenderwoche": "Die Kalenderwoche an der Unterricht ist, z.B. <mark>8</mark>.",
+        "Lehrjahr": "Welches Lehrjahr an dieser Kalenderwoche Unterricht hat, z.B. <mark>1</mark>."
+    },
+    "general_notes": "Die Liste muss <strong>vollständig</strong> für das ganze Schuljahr ergänzt werden z.B. die Blockwochen von 2024-2025. Vergangene Schuljahre sind redundant und können bei bedarf gelöscht werden."
+}

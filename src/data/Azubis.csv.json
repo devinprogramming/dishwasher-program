@@ -1,0 +1,10 @@
+{
+    "general_info": "Diese Liste enthält alle Azubis. Damit es fair und einheitlich bleibt, sollten kurzfristige Änderungen vermieden werden. Zum Beispiel, wenn jemand nur für einen Monat im Praktikum ist oder Krank wäre, würde eine Änderung den ganzen Plan um X Tage verschieben (X = wie viele Personen hinzugefügt/ignoriert/gelöscht wurden). Stattdessen sollte die Vertretung für den kurzen Zeitraum einspringen, bis die Person wieder da ist.",
+    "columns": {
+        "Vorname": "Der Vorname, z.B. <mark>Max</mark>.",
+        "Nachname": "Der Nachname, z.B. <mark>Mustermann</mark>.",
+        "Lehrjahr": "Das SCHULJAHR, in dem sich die Person befindet. z.B. Erstes Lehrjahr = <mark>1</mark>, drittes Lehrjahr = <mark>3</mark>, Umschüler im zweiten Lehrjahr = <mark>3</mark>.",
+        "Ignorieren": "Ob die Person nicht eingeplant werden soll, z.B. wegen eines längeren Praktikums oder weil sie ausgeschieden ist. Sobald hier <mark>IRGENDETWAS</mark> eingetragen ist, wird die Person ignoriert."
+    },
+    "general_notes": "<strong>Das Lehrjahr orientiert sich an den Blockwochen der Schule</strong>. Normalerweise ist ein Azubi im zweiten Lehrjahr auch im Unterricht des zweiten Lehrjahrs. Aber es gibt Ausnahmen, z.B. Umschüler, die im zweiten Lehrjahr einsteigen, oder Azubis, die eine Prüfung wiederholen und deshalb noch im dritten Lehrjahr sind. Wenn es mehrere Azubis mit demselben Namen gibt, z.B. Max M. und Max M., oder wenn Doppelnamen abgeschnitten werden, sollte der Vorname um einen Zweitnamen ergänzt werden, z.B. Max Thomas M."
+}

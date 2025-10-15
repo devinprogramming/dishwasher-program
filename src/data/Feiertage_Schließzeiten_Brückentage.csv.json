@@ -1,0 +1,8 @@
+{
+    "general_info": "Die Liste beinhaltet Daten an dem die Firnhaberstraße geschlossen ist, z.B. Brückentage, Schließzeiten, Feiertage, ...",
+    "columns": {
+        "Datum": "Das Datum an dem Firnhaberstraße geschlossen ist, z.B. <mark>01.04.2024</mark>.",
+        "Grund": "Der Grund wieso, z.B. <mark>Ostermontag</mark>."
+    },
+    "general_notes": "Die Liste muss <strong>vollständig</strong> für das ganze Schuljahr ergänzt werden z.B. die Daten von 2024-2025, auch wenn es erst September 2024 ist. Vergangene Schuljahre sind redundant und können bei bedarf gelöscht werden. Der Grund für Feiertäge/Brückentage/Schließzeiten ist optional und kann frei gewählt werden. Dieser dient nur zur vereinfachung um Brückentage einfacher nachvollziehen zu können."
+}
