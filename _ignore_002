@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Only external styling allowed - Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for toast notifications */
+        .toast-container {
+            z-index: 1055;
+        }
+        
+        .toast {
+            width: 350px;
+            max-width: 100%;
+            font-size: 0.875rem;
+            pointer-events: auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.15s linear;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .toast.bg-primary { background-color: #007bff !important; }
+        .toast.bg-success { background-color: #28a745 !important; }
+        .toast.bg-danger { background-color: #dc3545 !important; }
+        .toast.bg-warning { background-color: #ffc107 !important; color: #000; }
+        
+        .btn-close-white { filter: invert(1) grayscale(100%) brightness(200%); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4">Dienstplan Verwaltung</h2>
+
+    <!-- Toasts container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Azubi Data Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Azubi Daten</h5>
+        </div>
+        <div class="card-body">
+            <div id="loadingIndicator" class="alert alert-info">
+                Lade Azubi-Daten...
+            </div>
+            <div id="loadAllAzubi" class="mt-3"></div>
+        </div>
+    </div>
+
+    <!-- Plan Management -->
+    <div class="d-flex mb-3 align-items-center">
+        <button id="runUpdate" class="btn btn-primary me-3">🔄 Update Plan</button>
+        <span id="lastUpdate">Letztes Update: <strong>-</strong></span>
+    </div>
+
+    <!-- Statistics -->
+    <div id="statistics">
+        <h4>Statistiken</h4>
+        <h5 class="text-muted">Wie oft die Personen für ihren Dienst eingetragen sind.</h5>
+        <div id="statisticsTableContainer">
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Dienst</th>
+                        <th>Vertretung</th>
+                        <th>Lehrjahr</th>
+                    </tr>
+                </thead>
+                <tbody id="statisticsTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// CHANGED: Completely removed external JavaScript libraries
+// Using only vanilla JavaScript now
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Toast notification system - CHANGED: Custom implementation without Bootstrap JS
+    function showToast(message, type = 'standard') {
+        const ToastType = {
+            STANDARD: 'bg-primary',
+            ERROR: 'bg-danger',
+            WARNING: 'bg-warning',
+            SUCCESS: 'bg-success'
+        };
+
+        const toastContainer = document.getElementById('toastContainer');
+        const toastElement = document.createElement('div');
+        toastElement.className = `toast align-items-center text-white ${ToastType[type.toUpperCase()] || ToastType.STANDARD} border-0`;
+        toastElement.setAttribute('role', 'alert');
+        toastElement.setAttribute('aria-live', 'assertive');
+        toastElement.setAttribute('aria-atomic', 'true');
+        
+        toastElement.innerHTML = `
+            <div class="d-flex w-100">
+                <div class="toast-body flex-grow-1" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"></button>
+            </div>
+        `;
+
+        toastContainer.appendChild(toastElement);
+        
+        // Add show class after a brief delay
+        setTimeout(() => {
+            toastElement.classList.add('show');
+        }, 10);
+        
+        // Close button functionality
+        const closeButton = toastElement.querySelector('.btn-close');
+        closeButton.addEventListener('click', function() {
+            toastElement.classList.remove('show');
+            setTimeout(() => {
+                if (toastElement.parentNode) {
+                    toastElement.parentNode.removeChild(toastElement);
+                }
+            }, 300);
+        });
+
+        // Auto remove after 10 seconds
+        setTimeout(() => {
+            if (toastElement.parentNode) {
+                toastElement.classList.remove('show');
+                setTimeout(() => {
+                    if (toastElement.parentNode) {
+                        toastElement.parentNode.removeChild(toastElement);
+                    }
+                }, 300);
+            }
+        }, 10000);
+    }
+
+    // CHANGED: Custom CSV parser to replace Papa Parse
+    function parseCSV(csvText, delimiter = ';') {
+        const lines = csvText.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) return [];
+        
+        // Extract headers
+        const headers = lines[0].split(delimiter).map(header => header.trim());
+        
+        // Process data rows
+        const result = [];
+        for (let i = 1; i < lines.length; i++) {
+            const currentLine = lines[i].split(delimiter);
+            if (currentLine.length === headers.length) {
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header] = currentLine[index] ? currentLine[index].trim() : '';
+                });
+                result.push(obj);
+            }
+        }
+        
+        return result;
+    }
+
+    // CHANGED: Using fetch API instead of Papa Parse for file loading
+    function loadLocalCSV() {
+        const csvPath = '../data/Azubis.csv';
+        
+        fetch(csvPath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(csvText => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                
+                const azubiData = parseCSV(csvText, ';');
+                
+                if (azubiData.length === 0) {
+                    showToast('Keine Daten in der CSV-Datei gefunden', 'warning');
+                    return;
+                }
+                
+                displayAzubis(azubiData);
+                showToast(`${azubiData.length} Azubis erfolgreich geladen`, 'success');
+            })
+            .catch(error => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                showToast('Fehler beim Laden der CSV-Datei: ' + error.message, 'error');
+                console.error('CSV Load Error:', error);
+            });
+    }
+
+    // CHANGED: Updated to use vanilla JS instead of jQuery
+    function displayAzubis(azubiData) {
+        const container = document.getElementById('loadAllAzubi');
+        container.innerHTML = '';
+
+        // Create table with specific columns from CSV structure
+        const table = document.createElement('table');
+        table.className = 'table table-striped table-hover';
+        
+        // Create header with specific columns
+        const thead = document.createElement('thead');
+        thead.className = 'table-dark';
+        const headerRow = document.createElement('tr');
+        
+        // Define headers based on CSV structure
+        ['Vorname', 'Nachname', 'Lehrjahr', 'Aktion'].forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        // Create table body
+        const tbody = document.createElement('tbody');
+        
+        azubiData.forEach((azubi, index) => {
+            const row = document.createElement('tr');
+            row.id = `azubi-${index}`;
+            
+            // Add specific cells based on CSV structure
+            const vornameCell = document.createElement('td');
+            vornameCell.textContent = azubi.Vorname || '';
+            row.appendChild(vornameCell);
+            
+            const nachnameCell = document.createElement('td');
+            nachnameCell.textContent = azubi.Nachname || '';
+            row.appendChild(nachnameCell);
+            
+            const lehrjahrCell = document.createElement('td');
+            lehrjahrCell.textContent = azubi.Lehrjahr || '';
+            row.appendChild(lehrjahrCell);
+            
+            // Add remove button
+            const actionCell = document.createElement('td');
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Entfernen';
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.addEventListener('click', function() {
+                row.style.opacity = '0.5';
+                setTimeout(() => {
+                    row.remove();
+                    showToast('Azubi wurde entfernt', 'warning');
+                }, 300);
+            });
+            
+            actionCell.appendChild(removeButton);
+            row.appendChild(actionCell);
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+        
+        // Add summary
+        const summary = document.createElement('div');
+        summary.className = 'alert alert-info mb-3';
+        summary.innerHTML = `<strong>${azubiData.length} Azubis</strong> erfolgreich aus der lokalen CSV-Datei geladen`;
+        container.insertBefore(summary, container.firstChild);
+    }
+
+    // CHANGED: Updated to use vanilla JS instead of jQuery
+    function renderTable(statistics) {
+        const sortedNames = Object.keys(statistics.data).sort();
+        const tableBody = document.getElementById('statisticsTable');
+        tableBody.innerHTML = '';
+
+        sortedNames.forEach(name => {
+            const person = statistics.data[name];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${person.primary}</td>
+                <td>${person.secondary}</td>
+                <td>${person.year}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // CHANGED: Updated to use fetch API instead of jQuery.ajax
+    function fetchStatistics() {
+        fetch('/admin/get-statistics')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(statistics => {
+                document.getElementById('lastUpdate').innerHTML = 
+                    'Letztes Update: <strong>' + statistics.timestamp + '</strong> 🎉';
+                renderTable(statistics);
+            })
+            .catch(error => {
+                showToast('Fehler beim Laden der Statistiken', 'error');
+                console.error('Error fetching statistics:', error);
+            });
+    }
+
+    // CHANGED: Updated to use vanilla JS instead of jQuery
+    document.getElementById('runUpdate').addEventListener('click', function() {
+        const button = this;
+        button.disabled = true;
+        button.innerHTML = '⏳ Wird aktualisiert...';
+        
+        fetch('/admin/generate-plan')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                showToast('Plan wurde geupdated!', 'success');
+                fetchStatistics();
+            })
+            .catch(error => {
+                showToast('Fehler beim Update des Plans', 'error');
+                console.error('Error updating plan:', error);
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = '🔄 Update Plan';
+            });
+    });
+
+    // Initialize - automatically loads local CSV on startup
+    loadLocalCSV();
+    fetchStatistics();
+});
+</script>
+</body>
+</html>
